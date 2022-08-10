@@ -13,24 +13,41 @@ tk.geometry("700x300")
 
 for i in range(1,8):
     globals()['entry{}'.format(i)] = Entry(tk)
-    
-def execute():
-    a_pos = float(entry1.get())
-    total_a = float(entry2.get()) 
-    b_pos = float(entry3.get()) 
-    total_b = float(entry4.get())
-    
-    positive= [a_pos, b_pos]
-    negative = [total_a- a_pos, total_b - b_pos]
-    chi, p, d_f, expected = chi2_contingency([positive, negative])
-    entry5.delete(0, END)
-    entry5.insert(0, round(chi, 2))
-    entry6.insert(0, round(p,2))
-    if p<= 0.05:
-        text = "A와 B의 차이는 유의미합니다"
-    else: text = "A와 B의 차이는 무의미합니다"
-    entry7.insert(0, text)
 
+def execute(): # 카이제곱분포 함수 실행 
+    try:
+        a_pos = float(entry1.get())
+        total_a = float(entry2.get()) 
+        b_pos = float(entry3.get()) 
+        total_b = float(entry4.get())
+        
+        positive= [a_pos, b_pos]
+        negative = [total_a- a_pos, total_b - b_pos]
+        chi, p, d_f, expected = chi2_contingency([positive, negative])
+        entry5.delete(0, END)
+        entry5.insert(0, round(chi, 2))
+        entry6.delete(0, END)
+        entry6.insert(0, round(p,2))
+        if p<= 0.05:
+            text = "A와 B의 차이는 유의미합니다"
+        else: text = "A와 B의 차이는 무의미합니다"
+        entry7.delete(0, END)
+        entry7.insert(0, text)
+    except: 
+        error_text = "오류: 입력값 확인 필요"
+        entry5.delete(0, END)
+        entry6.delete(0, END)
+        entry7.delete(0, END)
+        entry7.insert(0, error_text)
+
+def clear(): # 프로그램 리셋을 위한 함수
+    entry1.delete(0, END)
+    entry2.delete(0, END)
+    entry3.delete(0, END)
+    entry4.delete(0, END)
+    entry5.delete(0, END)
+    entry6.delete(0, END)
+    entry7.delete(0, END)
     
 
 label1 = Label(tk, text='A 집단 전환 고객수').grid(row=1, column=0)
@@ -52,6 +69,6 @@ entry7.grid(row=17, columns=15)
 
 
 button1 = Button(tk, text='실행', command=execute).grid(row=12 ,column=7)
-
+button2 = Button(tk, text='Reset', command=clear).grid(row=12, column=10)
 
 tk.mainloop()
